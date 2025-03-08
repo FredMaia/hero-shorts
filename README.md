@@ -1,4 +1,4 @@
-# 🚀 Text2Clip: **Transforme Texto em Vídeos Viralizáveis para TikTok, Reels e Shorts**  
+# 🚀 Hero shorts: **Transforme Texto em Vídeos Viralizáveis para TikTok, Reels e Shorts**  
 *Crie conteúdo impactante em segundos com IA — 100% Gratuito!*
 
 <div align="center">
@@ -9,7 +9,7 @@
 
 ---
 
-## ✨ **Recursos Incríveis**  
+## **Recursos disponíveis**  
 - **🎥 Texto para Vídeo com IA**: Gere vídeos dinâmicos usando modelos do **Hugging Face** (Stable Video Diffusion) e **Coqui TTS** para voz realista.  
 - **🖼️ Banco de Vídeos Grátis**: Integração com a API do **Pexels** para adicionar cenas profissionais ao seu conteúdo.  
 - **📱 Templates Prontos**: Formatos otimizados para TikTok (9:16), Reels (1080x1920) e Shorts (YouTube).  
@@ -21,7 +21,7 @@
 ## 🛠️ **Tecnologias Utilizadas**  
 | **Frontend** (React)          | **Backend** (Python)           |  
 |-------------------------------|---------------------------------|  
-| ▶️ React + Vite               | 🐍 FastAPI                     |  
+| ▶️ React + Typescript               | 🐍 FastAPI                     |  
 | 🎨 Tailwind CSS               | 🤗 Hugging Face Transformers   |  
 | 🎬 FFmpeg.wasm (Edição no Navegador) | 🐸 Coqui TTS (Text-to-Speech) |  
 | 📱 PWA (App Offline)          | 🎞️ MoviePy (Processamento de Vídeo) |  
@@ -32,30 +32,27 @@
 ## 🎥 **Como Funciona?**  
 1. **Digite um Prompt**: Ex: *"Um astronauta dançando numa galáxia neon, estilo cyberpunk"*.  
 2. **Escolha um Template**: Para TikTok, Reels ou Shorts.  
-3. **Personalize**: Adicione textos, músicas e ajuste a duração.  
+3. **Personalize**: Adicione textos, músicas, ajuste a duração e os vídeos de fundo.
 4. **Renderize**: A IA gera o vídeo em minutos usando modelos open-source!  
 
-![Demo](https://via.placeholder.com/800x400.png?text=Demo+Text2Reels+-+Adicione+um+GIF+Impactante)  
+Demonstração: 
 
 ---
 
-## 🚀 **Comece Agora (Instalação em 2 Minutos)**  
+## 🚀 **Como rodar localmente:**  
 
 ### **Pré-requisitos**  
 - Python 3.10+  
 - Node.js 18+  
-- API Keys (Grátis): [Hugging Face](https://huggingface.co/settings/tokens) e [Pexels](https://www.pexels.com/api/)  
+- API Keys (Grátis): [Hugging Face](https://huggingface.co/settings/tokens) e [Pexels](https://www.pexels.com/api/)
+- 
 
 ### **Passo a Passo**  
 ```bash
-# Clone o repositório
-git clone https://github.com/seu-usuario/text2reels.git
-cd text2reels
-
 # Instale o Frontend
 cd frontend
 npm install
-npm run dev
+npm start
 
 # Instale o Backend
 cd ../backend
