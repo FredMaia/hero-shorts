@@ -49,20 +49,31 @@ os.makedirs(AUDIO_DIR, exist_ok=True)
 groq_client = Groq(api_key=GROQ_API_KEY)
 
 def make_movie_py_compatible_with_pillow():
+    """
+    Aplica correções para compatibilidade entre MoviePy e Pillow.
+    Esta função lida com a substituição do atributo ANTIALIAS que foi
+    descontinuado nas versões mais recentes do Pillow.
+    """
     try:
-        if not hasattr(Image, 'ANTIALIAS'):
-            if hasattr(Image, 'LANCZOS'):
-                Image.ANTIALIAS = Image.LANCZOS
-                print("Correção aplicada: PIL.Image.ANTIALIAS -> PIL.Image.LANCZOS")
-            else:
-                try:
-                    from PIL import Image
-                    Image.ANTIALIAS = Image.Resampling.LANCZOS
+        import PIL
+        
+        if hasattr(PIL, 'Image'):
+            if not hasattr(PIL.Image, 'ANTIALIAS'):
+                if hasattr(PIL.Image, 'LANCZOS'):
+                    PIL.Image.ANTIALIAS = PIL.Image.LANCZOS
+                    print("Correção aplicada: PIL.Image.ANTIALIAS -> PIL.Image.LANCZOS")
+                elif hasattr(PIL.Image, 'Resampling') and hasattr(PIL.Image.Resampling, 'LANCZOS'):
+                    PIL.Image.ANTIALIAS = PIL.Image.Resampling.LANCZOS
                     print("Correção aplicada: PIL.Image.ANTIALIAS -> PIL.Image.Resampling.LANCZOS")
-                except (ImportError, AttributeError):
-                    print("AVISO: Não foi possível aplicar a correção para PIL.Image.ANTIALIAS")
-    except ImportError:
-        print("AVISO: Não foi possível importar os módulos necessários para a correção do PIL")
+                else:
+                    print("AVISO: ANTIALIAS não encontrado e não foi possível aplicar correção")
+            else:
+                print("PIL.Image.ANTIALIAS já existe, nenhuma correção necessária")
+        else:
+            print("AVISO: PIL.Image não encontrado")
+            
+    except Exception as e:
+        print(f"AVISO: Erro ao configurar a compatibilidade do PIL: {str(e)}")
 
 def prepare_video_for_shorts(video_path, audio_path):
     try:
@@ -455,14 +466,10 @@ import whisper_timestamped as whisper
 @app.get("/legenda")
 async def create_captions():
     filename = "./short.mp4"
-    # Loading the video as a VideoFileClip
     original_clip = VideoFileClip(filename)
 
-    # Load the audio in the video to transcribe it and get transcribed text
     transcribed_text = get_transcribed_text(filename)
-    # Generate text elements for video using transcribed text
     text_clip_list = get_text_clips(text=transcribed_text, fontsize=90)
-    # Create a CompositeVideoClip that we write to a file
     final_clip = CompositeVideoClip([original_clip] + text_clip_list)
 
     final_clip.write_videofile("final.mp4")

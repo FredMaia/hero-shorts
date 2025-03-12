@@ -62,3 +62,13 @@ python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 python main.py
+```
+
+## 🏛️ Arquitetura do back-end
+
+- 📜 Geração de roteiro (Groq API) → O sistema recebe um prompt e utiliza a Groq API para criar um roteiro estruturado.
+- 🎬 Seleção de clipes (Pexels API) → Com base no roteiro gerado, a API do Pexels é usada para buscar vídeos relevantes.
+- 🗣️ Conversão de texto em fala (Coqui TTS ou Kokoro) → O roteiro é transformado em áudio utilizando a API Coqui TTS ou Kokoro82M, ambos **open source**.
+- 🎞️ Edição e legendagem (PyMovie & Whisper Timestamped) → O vídeo final é montado, sincronizando os clipes com o áudio gerado e adicionando legendas automáticas.
+
+![App architecture](/backend/assets/arq.png)
