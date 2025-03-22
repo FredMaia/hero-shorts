@@ -16,8 +16,11 @@ from moviepy.editor import AudioFileClip, TextClip, VideoFileClip, ColorClip, co
 from pydantic import BaseModel
 from moviepy.video.fx.resize import resize
 from PIL import Image
+import random
 
 model='tts_models/en/ljspeech/fast_pitch'
+screen_width = 1080
+screen_height = 1920
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -132,15 +135,13 @@ def generate_audio(text, file_path):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao gerar áudio: {str(e)}")
 
-
 def generate_script(prompt: str) -> dict:
     try:
         chat_completion = groq_client.chat.completions.create(
              messages=[{
                 "role": "user",
                 "content": f"""
-                Generate a short video script (30-60 seconds) divided into 5 parts and 5 stock video keywords.
-                Each part should be a short sentence or paragraph that will be narrated separately.
+                Generate a compelling short video script (30-60 seconds) divided into 5 distinct narrated parts. Each part should be a concise and impactful sentence or paragraph that flows seamlessly into the next, creating an engaging philosophical narrative. Additionally, provide 5 carefully chosen stock video keywords that will serve as visually striking backgrounds, enhancing the depth and emotional impact of the narration. The keywords should complement the theme and atmosphere of the video, even if they are not explicitly mentioned in the script
                 
                 JSON format: {{
                     "parts": [
@@ -156,14 +157,13 @@ def generate_script(prompt: str) -> dict:
                 Topic: {prompt}
                 """
             }],
-            model="mixtral-8x7b-32768",
+            model="qwen-2.5-32b",
             response_format={"type": "json_object"}
         )
         
         return json.loads(chat_completion.choices[0].message.content)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro no Groq: {str(e)}")
-
 
 def get_stock_video(keyword: str) -> str:
     try:
@@ -174,7 +174,11 @@ def get_stock_video(keyword: str) -> str:
         video_data = response.json()
 
         if video_data.get('videos'):
+            random.shuffle(video_data['videos'])  # Embaralha a lista de vídeos
+            
             for video in video_data['videos']:
+                random.shuffle(video['video_files'])  # Embaralha os arquivos de vídeo dentro do vídeo
+                
                 for video_file in video['video_files']:
                     width = video_file.get('width', 0)
                     height = video_file.get('height', 0)
@@ -182,13 +186,12 @@ def get_stock_video(keyword: str) -> str:
                     if height > width:
                         return download_video(video_file['link'])
             
-            video_file = video_data['videos'][0]['video_files'][0]['link']
+            video_file = random.choice(video_data['videos'][0]['video_files'])['link']
             return download_video(video_file)
         
         return None
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro no Pexels: {str(e)}")
-
 
 def download_video(url: str) -> str:
     try:
@@ -200,7 +203,6 @@ def download_video(url: str) -> str:
         return local_path
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao baixar vídeo: {str(e)}")
-
 
 def generate_video_segments(script_parts: list[str], video_paths: list[str]) -> list[dict]:
     segments = []
@@ -354,7 +356,7 @@ def create_final_video(segments: list[dict]) -> str:
         final_video = concatenate_videoclips(clips, method="compose")
         print(f"Concatenação concluída, duração total: {final_video.duration}s")
 
-        output_path = os.path.join(OUTPUT_DIR, f"shorts_{uuid.uuid4()}.mp4")
+        output_path = os.path.join(OUTPUT_DIR, f"short.mp4")
         
         print(f"Iniciando exportação do vídeo para: {output_path}")
         
@@ -433,8 +435,7 @@ async def create_video(request: VideoRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao processar a requisição: {str(e)}")
 
-screen_width = 1080
-screen_height = 1920
+
 
 def get_transcribed_text(filename):
     audio = whisper.load_audio(filename)
@@ -462,14 +463,41 @@ def get_text_clips(text, fontsize):
     return text_clips
 
 import whisper_timestamped as whisper
+from moviepy.editor import VideoFileClip, TextClip, CompositeVideoClip
+from moviepy.config import change_settings
+change_settings({"IMAGEMAGICK_BINARY": r"C:/Program Files/ImageMagick-7.1.1-Q16/magick.exe"})
+
+filename = "./short.mp4"        
+
+def get_transcribed_text(filename):
+    audio = whisper.load_audio(filename)
+    model = whisper.load_model("small", device="cpu")
+    results = whisper.transcribe(model, audio, language="en")
+
+    return results["segments"]
+
+def get_text_clips(text, fontsize):
+    text_clips = []
+    for segment in text:
+        for word in segment["words"]:
+            text_clips.append(
+                TextClip(word["text"],
+                    fontsize=fontsize,
+                    method='caption',
+                    stroke_width=5, 
+                    stroke_color="white", 
+                    font="Arial-Bold",
+                      color="white")
+                .set_start(word["start"])
+                .set_end(word["end"])   
+                .set_position("center")
+            )
+    return text_clips
 
 @app.get("/legenda")
 async def create_captions():
-    filename = "./short.mp4"
     original_clip = VideoFileClip(filename)
-
     transcribed_text = get_transcribed_text(filename)
     text_clip_list = get_text_clips(text=transcribed_text, fontsize=90)
     final_clip = CompositeVideoClip([original_clip] + text_clip_list)
-
-    final_clip.write_videofile("final.mp4")
+    final_clip.write_videofile("final.mp4", codec="libx264")

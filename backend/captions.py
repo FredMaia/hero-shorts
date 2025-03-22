@@ -36,14 +36,8 @@ def get_text_clips(text, fontsize):
             )
     return text_clips
 
-# Loading the video as a VideoFileClip
 original_clip = VideoFileClip(filename)
-
-# Load the audio in the video to transcribe it and get transcribed text
 transcribed_text = get_transcribed_text(filename)
-# Generate text elements for video using transcribed text
 text_clip_list = get_text_clips(text=transcribed_text, fontsize=90)
-# Create a CompositeVideoClip that we write to a file
 final_clip = CompositeVideoClip([original_clip] + text_clip_list)
-
 final_clip.write_videofile("final.mp4", codec="libx264")
