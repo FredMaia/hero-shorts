@@ -1,4 +1,3 @@
-/* src/App.css */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap');
 
 :root {
@@ -32,7 +31,6 @@ body {
   overflow: hidden;
 }
 
-/* Background effects */
 .stars {
   position: fixed;
   top: 0;
@@ -57,7 +55,6 @@ body {
   filter: blur(30px);
 }
 
-/* Header styles */
 header {
   text-align: center;
   margin-bottom: 3rem;
@@ -85,7 +82,6 @@ h1 span {
   letter-spacing: 1px;
 }
 
-/* Main content styles */
 main {
   max-width: 1200px;
   margin: 0 auto;
@@ -112,7 +108,6 @@ main {
   color: rgba(255, 255, 255, 0.8);
 }
 
-/* Form styles */
 .input-group {
   position: relative;
   margin-bottom: 1.5rem;
@@ -197,7 +192,6 @@ button.loading {
   to { transform: rotate(360deg); }
 }
 
-/* Process indicators */
 .process-container {
   margin: 2rem 0;
 }
@@ -249,7 +243,6 @@ button.loading {
   background: rgba(110, 68, 255, 0.1);
 }
 
-/* Results container */
 .result-container {
   margin-top: 2rem;
   padding: 1.5rem;
@@ -312,7 +305,6 @@ video {
   border: 1px solid rgba(255, 42, 109, 0.3);
 }
 
-/* Features section */
 .features {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -350,7 +342,6 @@ video {
   color: rgba(255, 255, 255, 0.7);
 }
 
-/* Footer styles */
 footer {
   text-align: center;
   padding: 2rem 0;
@@ -359,7 +350,6 @@ footer {
   font-size: 0.9rem;
 }
 
-/* Responsive styles */
 @media (max-width: 768px) {
   h1 {
     font-size: 2.5rem;
