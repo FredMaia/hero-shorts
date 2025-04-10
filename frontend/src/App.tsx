@@ -134,7 +134,7 @@ const App: React.FC = () => {
       </main>
 
       <footer>
-        <p>Desenvolvido por tecnologias Open Source</p>
+        <p>Desenvolvido por Frederico Maia, utilizando tecnologias Open Source</p>
         <p>Nenhum limite de uso - 100% gratuito</p>
       </footer>
     </div>
