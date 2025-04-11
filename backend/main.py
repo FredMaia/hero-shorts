@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+
 import requests
 import httpx
 import json
@@ -318,27 +320,27 @@ def create_final_video(segments: list[dict]) -> str:
                     audio.close()
                     continue
                 
-                try:
-                    txt_clip = TextClip(
-                        txt=segment["script_part"], 
-                        fontsize=36,  
-                        color='white', 
-                        bg_color='rgba(0,0,0,0.5)',
-                        size=(1000, None), 
-                        method='caption'
-                    )
-                    txt_clip = txt_clip.set_duration(clip.duration)
-                    txt_clip = txt_clip.set_position(('center', 'bottom'))
+                # try:
+                #     txt_clip = TextClip(
+                #         txt=segment["script_part"], 
+                #         fontsize=36,  
+                #         color='white', 
+                #         bg_color='rgba(0,0,0,0.5)',
+                #         size=(1000, None), 
+                #         method='caption'
+                #     )
+                #     txt_clip = txt_clip.set_duration(clip.duration)
+                #     txt_clip = txt_clip.set_position(('center', 'bottom'))
                     
-                    final_clip = CompositeVideoClip([clip, txt_clip], size=(1080, 1920))
+                #     final_clip = CompositeVideoClip([clip, txt_clip], size=(1080, 1920))
                     
-                    print("Legenda adicionada com sucesso")
-                except Exception as text_error:
-                    print(f"Erro ao adicionar legenda: {str(text_error)}")
-                    final_clip = clip
+                #     print("Legenda adicionada com sucesso")
+                # except Exception as text_error:
+                #     print(f"Erro ao adicionar legenda: {str(text_error)}")
+                #     final_clip = clip
                 
-                clips.append(final_clip)
-                print(f"Segmento processado com sucesso, duração: {final_clip.duration}s")
+                # clips.append(final_clip)
+                # print(f"Segmento processado com sucesso, duração: {final_clip.duration}s")
                 
             except Exception as segment_error:
                 import traceback
@@ -377,6 +379,7 @@ def create_final_video(segments: list[dict]) -> str:
         
         return output_path
         
+        
     except Exception as e:
         import traceback
         error_trace = traceback.format_exc()
@@ -396,7 +399,6 @@ async def create_audio(request: dict):
     file_path = os.path.join(AUDIO_DIR, "output.wav")
     generate_audio(request["text"], file_path)
     return {"message": "Áudio criado com sucesso", "file_path": file_path}
-
 
 @app.post("/generate-video")
 async def create_video(request: VideoRequest):
@@ -420,22 +422,27 @@ async def create_video(request: VideoRequest):
         segments = generate_video_segments(script_parts, video_paths)
         
         final_video_path = create_final_video(segments)
+
+        video_path = os.path.join('.', 'short.mp4') 
+        return FileResponse(
+            path=video_path,
+            media_type='video/mp4',
+            filename='short.mp4'
+        )
         
-        return {
-            "message": "Vídeo criado com sucesso",
-            "video_url": final_video_path,
-            "segments": [
-                {
-                    "script": segment["script_part"],
-                    "audio": segment["audio_path"],
-                    "duration": segment["duration"]
-                } for segment in segments
-            ]
-        }
+        # return {
+        #     "message": "Vídeo criado com sucesso",
+        #     "video_url": final_video_path,
+        #     "segments": [
+        #         {
+        #             "script": segment["script_part"],
+        #             "audio": segment["audio_path"],
+        #             "duration": segment["duration"]
+        #         } for segment in segments
+        #     ]
+        # }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao processar a requisição: {str(e)}")
-
-
 
 def get_transcribed_text(filename):
     audio = whisper.load_audio(filename)
