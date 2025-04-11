@@ -10,7 +10,8 @@ interface VideoResponse {
 const App: React.FC = () => {
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<VideoResponse | null>(null);
+  // const [result, setResult] = useState<VideoResponse | null>(null);
+  const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -26,11 +27,13 @@ const App: React.FC = () => {
     setResult(null);
 
     try {
-      const response = await axios.post<VideoResponse>('http://localhost:8000/generate-video', {
-        prompt
-      });
-      
-      setResult(response.data);
+      const response = await axios.post('http://localhost:8000/generate-video', 
+        { prompt },  
+        { responseType: 'blob' }  
+    );
+
+      const videoUrl = URL.createObjectURL(response.data);
+      setResult(videoUrl);
     } catch (err) {
       setError('Erro ao gerar o vídeo. Verifique se o servidor está rodando.');
       console.error('Erro:', err);
@@ -97,12 +100,12 @@ const App: React.FC = () => {
             <div className="result-container">
               <h3>🎬 Seu vídeo está pronto!</h3>
               <div className="video-player">
-                <video controls src={result.videoUrl}>
+                <video controls src={result}>
                   Seu navegador não suporta o elemento de vídeo.
                 </video>
               </div>
               <div className="action-buttons">
-                <a href={result.videoUrl} download className="download-btn">
+                <a href={result} download className="download-btn">
                   Baixar vídeo
                 </a>
                 <button className="share-btn">
