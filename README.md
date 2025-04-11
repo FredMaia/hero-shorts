@@ -9,6 +9,9 @@
 
 ---
 
+![App frontend](/backend/assets/front.png)
+
+
 ## **Recursos disponíveis**  
 - **🎥 Texto para Vídeo com IA**: Gere vídeos dinâmicos usando modelos do **Hugging Face** (Stable Video Diffusion) e **Coqui TTS** para voz realista.  
 - **🖼️ Banco de Vídeos Grátis**: Integração com a API do **Pexels** para adicionar cenas profissionais ao seu conteúdo.  
