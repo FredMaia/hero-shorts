@@ -1,4 +1,4 @@
-# 🚀 Hero shorts: **Transforme Texto em Vídeos Viralizáveis para TikTok, Reels e Shorts**  
+# 🚀 Hero shorts: **Transforme texto em vídeos curtos viralizáveis**  
 *Crie conteúdo impactante em segundos com IA — 100% Gratuito!*
 
 <div align="center">
@@ -13,22 +13,20 @@
 
 
 ## **Recursos disponíveis**  
-- **🎥 Texto para Vídeo com IA**: Gere vídeos dinâmicos usando modelos do **Hugging Face** (Stable Video Diffusion) e **Coqui TTS** para voz realista.  
-- **🖼️ Banco de Vídeos Grátis**: Integração com a API do **Pexels** para adicionar cenas profissionais ao seu conteúdo.  
-- **📱 Templates Prontos**: Formatos otimizados para TikTok (9:16), Reels (1080x1920) e Shorts (YouTube).  
-- **🎵 Trilhas Sonoras Automáticas**: Adicione músicas royalty-free com sincronização perfeita.  
-- **⚡ Exporte em 1 Clique**: Vídeos em MP4 ou GIF, prontos para postar!  
+- **Texto para vídeo com IA**: Gere vídeos dinâmicos usando modelos do **Hugging Face** (Stable Video Diffusion) e **Coqui TTS** para voz realista.  
+- **Banco de Vídeos Grátis**: Integração com a API do **Pexels** para adicionar cenas profissionais ao seu conteúdo.  
+- **Templates Prontos**: Formatos otimizados para TikTok, Reels e Shorts.  
 
 ---
 
 ## 🛠️ **Tecnologias Utilizadas**  
 | **Frontend** (React)          | **Backend** (Python)           |  
 |-------------------------------|---------------------------------|  
-| ▶️ React + Typescript               | 🐍 FastAPI                     |  
-| 🎨 Tailwind CSS               | 🤗 Hugging Face Transformers   |  
-| 🎬 FFmpeg.wasm (Edição no Navegador) | 🐸 Coqui TTS (Text-to-Speech) |  
-| 📱 PWA (App Offline)          | 🎞️ MoviePy (Processamento de Vídeo) |  
-| 🌐 Axios (API Calls)          | 📸 Pexels API (Stock Videos)   |  
+|  React + Typescript               |  FastAPI                     |  
+|  Tailwind CSS               |  Hugging Face Transformers   |  
+|  FFmpeg.wasm (Edição no Navegador) |  Coqui TTS (Text-to-Speech) |  
+|  PWA (App Offline)          |  MoviePy (Processamento de Vídeo) |  
+| Axios (API Calls)          |  Pexels API (Stock Videos)   |  
 
 ---
 
@@ -37,8 +35,6 @@
 2. **Escolha um Template**: Para TikTok, Reels ou Shorts.  
 3. **Personalize**: Adicione textos, músicas, ajuste a duração e os vídeos de fundo.
 4. **Renderize**: A IA gera o vídeo em minutos usando modelos open-source!  
-
-Demonstração: 
 
 ---
 
@@ -52,24 +48,7 @@ Demonstração:
 - image magick
 - MSVC Compiler for C++
 
-### **Passo a Passo**  
-```bash
-# Instale o Frontend
-cd frontend
-npm install
-npm start
 
-# Instale o Backend
-cd ../backend
-
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn main:app --timeout-keep-alive 400
-
-docker build -t video-generator .
-docker run -p 8000:8000 --env-file .env video-generator
-```
 
 ## 🏛️ Arquitetura do back-end
 
@@ -79,3 +58,11 @@ docker run -p 8000:8000 --env-file .env video-generator
 - 🎞️ Edição e legendagem (PyMovie & Whisper Timestamped) → O vídeo final é montado, sincronizando os clipes com o áudio gerado e adicionando legendas automáticas.
 
 ![App architecture](/backend/assets/arq.png)
+
+
+
+## Considerações importantes
+
+- 💡 O setup seria bem mais fácil com Docker, mas minha máquina quase virou uma torradeira tentando rodar os modelos no container
+
+- 🕒 Talvez o vídeo demore para rodar, inicialize o backend com a flag `--timeout-keep-alive` para evitar timeouts
