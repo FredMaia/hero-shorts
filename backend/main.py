@@ -341,7 +341,7 @@ def create_final_video(segments: list[dict]) -> str:
                 
                 # clips.append(final_clip)
                 # print(f"Segmento processado com sucesso, duração: {final_clip.duration}s")
-                
+                clips.append(clip)
             except Exception as segment_error:
                 import traceback
                 error_trace = traceback.format_exc()
@@ -423,11 +423,19 @@ async def create_video(request: VideoRequest):
         
         final_video_path = create_final_video(segments)
 
-        video_path = os.path.join('.', 'short.mp4') 
+        video_path = os.path.join('.', 'final.mp4')
+
+        filename = "short.mp4"
+        original_clip = VideoFileClip(filename)
+        transcribed_text = get_transcribed_text(filename)
+        text_clip_list = get_text_clips(text=transcribed_text, fontsize=90)
+        final_clip = CompositeVideoClip([original_clip] + text_clip_list)
+        final_clip.write_videofile("final.mp4", codec="libx264")
+
         return FileResponse(
             path=video_path,
             media_type='video/mp4',
-            filename='short.mp4'
+            filename='final.mp4'
         )
         
         # return {
