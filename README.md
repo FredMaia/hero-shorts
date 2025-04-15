@@ -20,13 +20,13 @@
 ---
 
 ## 🛠️ **Tecnologias Utilizadas**  
-| **Frontend** (React)          | **Backend** (Python)           |  
-|-------------------------------|---------------------------------|  
-|  React + Typescript               |  FastAPI                     |  
-|  Tailwind CSS               |  Hugging Face Transformers   |  
-|  FFmpeg.wasm (Edição no Navegador) |  Coqui TTS (Text-to-Speech) |  
-|  PWA (App Offline)          |  MoviePy (Processamento de Vídeo) |  
-| Axios (API Calls)          |  Pexels API (Stock Videos)   |  
+| **Backend** (Python)           |  
+|-------------------------------|
+|  FastAPI                     |  
+|  Hugging Face Transformers   |  
+|  Coqui TTS (Text-to-Speech) |  
+|  MoviePy (Processamento de Vídeo) |  
+|  Pexels API (Stock Videos)   |  
 
 ---
 
