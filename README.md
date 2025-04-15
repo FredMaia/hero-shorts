@@ -43,7 +43,7 @@
 ### **Pré-requisitos**  
 - Python 3.10+  
 - Node.js 18+  
-- API Keys (Grátis): [Hugging Face](https://huggingface.co/settings/tokens) e [Pexels](https://www.pexels.com/api/)
+- API Keys (Grátis): [Pexels](https://www.pexels.com/api/)
 - ffmpeg
 - image magick
 - MSVC Compiler for C++
